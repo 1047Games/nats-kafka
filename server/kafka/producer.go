@@ -98,10 +98,12 @@ func NewProducer(cc conf.ConnectorConfig, bc conf.NATSKafkaBridgeConfig, topic s
 		sc.Net.SASL.User = cc.SASL.User
 		sc.Net.SASL.Password = cc.SASL.Password
 	} else if cc.IAM.Enable && cc.IAM.Region != "" {
-		fmt.Printf("Using IAM in region: %s\n", cc.IAM.Region)
 		sc.Net.SASL.Enable = true
 		sc.Net.SASL.Mechanism = sarama.SASLTypeOAuth
 		sc.Net.SASL.TokenProvider = &MSKAccessTokenProvider{Region: cc.IAM.Region}
+		tlsConfig := tls.Config{}
+		sc.Net.TLS.Enable = true
+		sc.Net.TLS.Config = &tlsConfig
 	}
 	if sc.Net.SASL.Enable && cc.SASL.InsecureSkipVerify {
 		sc.Net.TLS.Enable = true
