@@ -101,10 +101,8 @@ func NewProducer(cc conf.ConnectorConfig, bc conf.NATSKafkaBridgeConfig, topic s
 		sc.Net.SASL.Enable = true
 		sc.Net.SASL.Mechanism = sarama.SASLTypeOAuth
 		sc.Net.SASL.TokenProvider = &MSKAccessTokenProvider{Region: cc.IAM.Region}
-		tlsConfig := tls.Config{}
-		sc.Net.TLS.Enable = true
-		sc.Net.TLS.Config = &tlsConfig
 	}
+
 	if sc.Net.SASL.Enable && cc.SASL.InsecureSkipVerify {
 		sc.Net.TLS.Enable = true
 		sc.Net.TLS.Config = &tls.Config{
@@ -113,6 +111,10 @@ func NewProducer(cc conf.ConnectorConfig, bc conf.NATSKafkaBridgeConfig, topic s
 	} else if tlsC, err := cc.TLS.MakeTLSConfig(); tlsC != nil && err == nil {
 		sc.Net.TLS.Enable = true
 		sc.Net.TLS.Config = tlsC
+	} else if cc.IAM.Enable {
+		tlsConfig := tls.Config{}
+		sc.Net.TLS.Enable = true
+		sc.Net.TLS.Config = &tlsConfig
 	}
 	if cc.SASL.TLS {
 		sc.Net.TLS.Enable = cc.SASL.TLS
