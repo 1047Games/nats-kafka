@@ -12,7 +12,8 @@ LABEL maintainer "Ivan Kozlovic <ivan@nats.io>"
 LABEL maintainer "Stephen Asbury <sasbury@nats.io>"
 LABEL maintainer "Jaime Piña <jaime@nats.io>"
 
-FROM scratch
+FROM alpine:latest
+
 COPY --from=build /go/src/nats-kafka/nats-kafka.docker /bin/nats-kafka
 COPY --from=osdeps /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
