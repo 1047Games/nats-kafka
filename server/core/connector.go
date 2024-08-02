@@ -386,6 +386,11 @@ func (conn *BridgeConnector) subscribeToJetStream(subject string, queueName stri
 		options = append(options, nats.BindStream(conn.config.Stream))
 	}
 
+	if conn.bridge.config.JetStream.MaxAckPending > 0 {
+		conn.bridge.Logger().Noticef("Setting MaxAckPending=%d", conn.bridge.config.JetStream.MaxAckPending)
+		options = append(options, nats.MaxAckPending(conn.bridge.config.JetStream.MaxAckPending))
+	}
+
 	traceEnabled := conn.bridge.Logger().TraceEnabled()
 	ackSyncEnabled := conn.bridge.config.JetStream.EnableAckSync
 

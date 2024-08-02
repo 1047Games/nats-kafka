@@ -172,6 +172,7 @@ type JetStreamConfig struct {
 	EnableFlowControl      bool
 	EnableAckSync          bool
 	HeartbeatInterval      int // milliseconds
+	MaxAckPending          int
 }
 
 // DefaultBridgeConfig generates a default configuration with
